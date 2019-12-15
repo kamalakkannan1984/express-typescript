@@ -133,3 +133,17 @@ Response
     "msg": "NO"
 }
 
+#12 logout
+GET
+http://localhost:3000/api/logout
+
+#13 check logged In
+POST
+http://localhost:3000/api/logged-in
+Request
+checkLoggedIn : true
+Response
+{
+    "username": "distributor2"
+}
+

@@ -1,6 +1,9 @@
 import * as csv from "csvtojson";
 import { DBConn } from "../../database";
 
+/**
+ * Read the location CSV file and store the location collection
+ */
 export class LOCATION {
   private readonly csvFile = "./controllers/location/location.csv";
   public async readCSVFile() {

@@ -1,3 +1,5 @@
+import { UsersModel } from "./models/users";
+
 export class Config {
   static env = process.env.NODE_ENV;
   static httpPort = 4200;
@@ -6,19 +8,19 @@ export class Config {
   static mongoURL = `mongodb://localhost:27017/distributors`;
   static apiPrefix = "/api";
   static allowOriginHost = "http://localhost:3000";
-
-  //Defualt user
 }
 
-export class defaultUser {
-  static distributorName: "Distributor1";
-  static username: "distributor1";
-  static password: "1234";
-  static createdBy: "system";
-  static include: [
-    { countryCode: ["IN", "US"]; cityCode: []; ProvinceCode: [] }
-  ];
-  static exclude: [
-    { countryCode: ["IN"]; ProvinceCode: ["TN", "KA"]; cityCode: ["CENAI"] }
-  ];
-}
+/**
+ * Configuration for default user
+ */
+export const admin: UsersModel = {
+  distributorName: "Distributor1",
+  username: "distributor1",
+  password: "1234",
+  createdDate: new Date(),
+  createdBy: "system",
+  include: [{ countryCode: ["IN", "US"], cityCode: [], ProvinceCode: [] }],
+  exclude: [
+    { countryCode: ["IN"], ProvinceCode: ["TN", "KA"], cityCode: ["CENAI"] }
+  ]
+};

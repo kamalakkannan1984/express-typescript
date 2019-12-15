@@ -2,8 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { UsersModel } from "../models/users";
 import { CreateHashedPassword } from "../lib/bcrypt";
 import * as Users from "../queries/users";
-import { Config, defaultUser } from "./../config";
+import { admin } from "../config";
 
+/**
+ * Add user
+ * @param req
+ * @param res
+ */
 export const register = async (req: Request, res: Response) => {
   const user: UsersModel = req.body;
   const adminUserName = req.session.user;
@@ -49,6 +54,12 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Itration for find distribution by city name
+ * @param cityAuth
+ * @param cityArr
+ * @param cityName
+ */
 function findDistribution(
   cityAuth: any[],
   cityArr: string | any[],
@@ -74,6 +85,12 @@ function findDistribution(
     }
   }
 }
+
+/**
+ * Check Distribution by city name
+ * @param req
+ * @param res
+ */
 export async function checkDistributionForCity(req: Request, res: Response) {
   const cityName: any = req.params.cityName;
   const include = req.session.include[0];
@@ -81,12 +98,12 @@ export async function checkDistributionForCity(req: Request, res: Response) {
   let cityAuth: any;
   let cityArr: any = exclude.cityCode;
   let findCityStatus = {};
-  console.log(cityName);
+
   if (checkEmpty(include.countryCode)) {
     cityAuth = await Users.checkUserAuth({
       countryCode: include.countryCode
     });
-    //console.log(cityAuth);
+
     findCityStatus = findDistribution(cityAuth, cityArr, cityName);
     if (typeof findCityStatus === "object") {
       return res.status(401).send(findCityStatus);
@@ -95,6 +112,7 @@ export async function checkDistributionForCity(req: Request, res: Response) {
     cityAuth = await Users.checkUserAuth({
       provinceCode: include.provinceCode
     });
+
     findCityStatus = findDistribution(cityAuth, cityArr, cityName);
     if (typeof findCityStatus === "object") {
       return res.status(401).send(findCityStatus);
@@ -103,6 +121,7 @@ export async function checkDistributionForCity(req: Request, res: Response) {
     cityAuth = await Users.checkUserAuth({
       cityCode: include.cityCode
     });
+
     findCityStatus = findDistribution(cityAuth, cityArr, cityName);
     if (typeof findCityStatus === "object") {
       return res.status(401).send(findCityStatus);
@@ -112,6 +131,11 @@ export async function checkDistributionForCity(req: Request, res: Response) {
   return res.status(200).send({ msg: "YES" });
 }
 
+/**
+ * Get all distributors
+ * @param req
+ * @param res
+ */
 export async function getAll(req: Request, res: Response) {
   try {
     const users = await Users.getAll();
@@ -121,6 +145,11 @@ export async function getAll(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get individual Distribuor
+ * @param req
+ * @param res
+ */
 export async function get(req: Request, res: Response) {
   const username = req.params.username;
   console.log(username);
@@ -132,6 +161,10 @@ export async function get(req: Request, res: Response) {
   }
 }
 
+/**
+ * Get approved location by username
+ * @param username
+ */
 export async function getArroved(username: string) {
   try {
     const users = await Users.getArrovedLocation(username);
@@ -141,10 +174,20 @@ export async function getArroved(username: string) {
   }
 }
 
+/**
+ * Check object array empty
+ * @param arrObj
+ */
 function checkEmpty(arrObj: string | any[]) {
   return typeof arrObj !== "undefined" && arrObj.length > 0;
 }
 
+/**
+ * Check allowed for Country, Pprovince, city location
+ * @param include
+ * @param includeParam
+ * @param showText
+ */
 export async function checkAllowLocation(
   include: any,
   includeParam: any,
@@ -245,6 +288,11 @@ export async function checkAllowLocation(
   return 1;
 }
 
+/**
+ * Update user by username
+ * @param req
+ * @param res
+ */
 export async function update(req: Request, res: Response) {
   const users: UsersModel = req.body;
   try {
@@ -279,6 +327,11 @@ export async function update(req: Request, res: Response) {
   }
 }
 
+/**
+ * Delete the user by username
+ * @param req
+ * @param res
+ */
 export async function remove(req: Request, res: Response) {
   const username: any = req.params.username;
 
@@ -296,23 +349,20 @@ export async function remove(req: Request, res: Response) {
     });
 }
 
+/**
+ * Create default user (Distributor1)
+ */
 export const createDefaultDistributor = () => {
-  const admin: UsersModel = {
-    distributorName: defaultUser.distributorName,
-    username: defaultUser.username,
-    password: "1234",
-    createdDate: new Date(),
-    createdBy: defaultUser.createdBy,
-    include: defaultUser.include,
-    exclude: defaultUser.exclude
-  };
-
+  const password = admin.password;
   Users.isUserNameAvailable(admin)
     .then(() =>
       CreateHashedPassword(admin)
         .then(userWithHash => Users.createUser(userWithHash))
         .then(newUser => {
           newUser.password = undefined;
+          console.log("Successfully created default user.");
+          console.log("username", admin.username);
+          console.log("password", password);
           return Promise.resolve();
         })
     )

@@ -2,6 +2,10 @@ import { UsersModel } from "../models/users";
 import { User } from "../database/users.schema";
 import { Locations } from "../database/location.schema";
 
+/**
+ * Query for create user
+ * @param userData
+ */
 export async function createUser(userData: UsersModel): Promise<UsersModel> {
   const user = new User(userData);
   try {
@@ -12,6 +16,10 @@ export async function createUser(userData: UsersModel): Promise<UsersModel> {
   }
 }
 
+/**
+ * Query for find user
+ * @param username
+ */
 export function findOne(username: any): any {
   return User.findOne({ username: username }).then((userModel: any) => {
     if (userModel === null) {
@@ -24,6 +32,9 @@ export function findOne(username: any): any {
   });
 }
 
+/**
+ * Query for get all users
+ */
 export function getAll(): Promise<UsersModel[]> {
   return new Promise((resolve, reject) => {
     User.find({}, (error, requestsArray) => {
@@ -43,6 +54,10 @@ export function getAll(): Promise<UsersModel[]> {
   });
 }
 
+/**
+ * Query for user details
+ * @param users
+ */
 export async function get(users: string): Promise<UsersModel[]> {
   try {
     const userModel = await User.findOne({ username: users }, { _id: 0 })
@@ -60,6 +75,10 @@ export async function get(users: string): Promise<UsersModel[]> {
   }
 }
 
+/**
+ * Get Approved location
+ * @param username
+ */
 export function getArrovedLocation(username: string): Promise<UsersModel[]> {
   return new Promise((resolve, reject) => {
     User.find({ username: username }, (error, requestsArray) => {
@@ -70,7 +89,6 @@ export function getArrovedLocation(username: string): Promise<UsersModel[]> {
           msg: "Error getting"
         });
       }
-      console.log(requestsArray);
       resolve(requestsArray);
     })
       .select("include exclude")
@@ -78,6 +96,10 @@ export function getArrovedLocation(username: string): Promise<UsersModel[]> {
   });
 }
 
+/**
+ * Find user exist
+ * @param requestedUser
+ */
 export function isUserNameAvailable(requestedUser: any): any {
   return User.findOne({ username: requestedUser.username }).then(userModel => {
     if (userModel) {
@@ -87,6 +109,11 @@ export function isUserNameAvailable(requestedUser: any): any {
   });
 }
 
+/**
+ * Assign user object
+ * @param user
+ * @param adminUserName
+ */
 export function addInfoToUserObject(
   user: UsersModel,
   adminUserName: string
@@ -96,33 +123,11 @@ export function addInfoToUserObject(
   return Promise.resolve(user);
 }
 
-export function FindByIdAndUpdate(userObject: any): Promise<UsersModel> {
-  return new Promise((resolve, reject) => {
-    const query = {
-      username: userObject.username
-    };
-    return User.findOneAndUpdate(
-      query,
-      userObject,
-      {
-        new: true
-      },
-      (err, updatedUser) => {
-        if (err) {
-          console.error("User Error findByIdAndUpdate ", err);
-          return reject({
-            status: 400,
-            msg: "Bad Request"
-          });
-        }
-        return resolve(updatedUser);
-      }
-    ).select(
-      "_id distributorName username include exclude createdDate createdBy"
-    );
-  });
-}
-
+/**
+ * Query for update the user
+ * @param requestDetails
+ * @param user
+ */
 export async function updateRequest(
   requestDetails: UsersModel,
   user: any
@@ -147,12 +152,20 @@ export async function updateRequest(
   }
 }
 
+/**
+ * Query for check location by location code
+ * @param code
+ */
 export async function checkUserAuth(code: any) {
   return Locations.find(code, (error, requestsArray) => {
     return requestsArray;
   });
 }
 
+/**
+ * Delete query
+ * @param username
+ */
 export async function findOneAndDelete(username: any) {
   try {
     await User.findOneAndDelete({ username: username });

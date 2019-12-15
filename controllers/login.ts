@@ -4,6 +4,12 @@ import { UsersModel } from "../models/users";
 import * as user from "../queries/users";
 import * as Users from "./users";
 
+/**
+ * User login
+ * @param req
+ * @param res
+ * @param next
+ */
 export const LoginController = (
   req: Request,
   res: Response,
@@ -30,6 +36,10 @@ export const LoginController = (
     });
 };
 
+/**
+ * Save the session
+ * @param req
+ */
 function saveSession(req: Request): Promise<void> {
   return new Promise((resolve, reject) => {
     req.session.save(err => {

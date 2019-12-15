@@ -11,18 +11,18 @@ const DISTRIBTORS = "/distributors";
 
 export const Routes = Router()
   .post(LOGIN, LoginController)
-  .post(IS_LOGGED_IN)
+  .post(IS_LOGGED_IN, SessionController.checkSession())
   .get(LOGOUT, LogoutController)
   .post(DISTRIBTORS, SessionController.checkAuthendication(), Users.register)
   .get(DISTRIBTORS, SessionController.checkAuthendication(), Users.getAll)
   .get(
-    "/distribtors/checkDistribtionCityName/:cityName",
+    `${DISTRIBTORS}/checkDistribtionCityName/:cityName`,
     SessionController.checkAuthendication(),
     Users.checkDistributionForCity
   )
   .get(
     `${DISTRIBTORS}/:username`,
-    SessionController.checkAuthorization(),
+    SessionController.checkAuthendication(),
     Users.get
   )
   .put(
@@ -32,6 +32,6 @@ export const Routes = Router()
   )
   .delete(
     `${DISTRIBTORS}/:username`,
-    SessionController.checkAuthendication(),
+    SessionController.checkAuthorization(),
     Users.remove
   );

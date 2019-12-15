@@ -10,13 +10,4 @@ app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
   createDefaultDistributor();
   LocationInstance.readCSVFile();
-  //init();
 });
-
-/*function init() {
-  LocationInstance.readCSVFile()
-    .then(() => {
-      console.info(`Successfully populated location file.`);
-    })
-    .catch(error => {});
-}*/

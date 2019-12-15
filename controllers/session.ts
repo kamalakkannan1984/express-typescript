@@ -30,7 +30,7 @@ export function checkAuthendication() {
     if (req.session.user) {
       next();
     } else {
-      return res.status(403).send();
+      return res.status(403).send({ msg: "Authendiction failed" });
     }
   };
 }
@@ -40,7 +40,7 @@ export function checkAuthorization() {
     if (req.session.user && findRole(req.params.username)) {
       next();
     } else {
-      return res.status(403).send();
+      return res.status(403).send({ msg: "Authorization failed" });
     }
   };
 }

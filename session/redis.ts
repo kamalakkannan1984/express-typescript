@@ -1,5 +1,4 @@
 import * as redis from "redis";
-
 import { Config } from "./../config";
 
 const retryStrategy = (opts: redis.RetryStrategyOptions): number => {

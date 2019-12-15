@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { UsersModel } from "../models/users";
 import { CreateHashedPassword } from "../lib/bcrypt";
 import * as Users from "../queries/users";
+import { Config, defaultUser } from "./../config";
 
 export const register = async (req: Request, res: Response) => {
   const user: UsersModel = req.body;
@@ -287,7 +288,7 @@ export async function remove(req: Request, res: Response) {
 
   return Users.findOneAndDelete(username)
     .then(() => {
-      return res.status(200).send();
+      return res.status(200).send({ msg: "Successfully deleted" });
     })
     .catch((err: any) => {
       console.error(err);
@@ -297,16 +298,15 @@ export async function remove(req: Request, res: Response) {
 
 export const createDefaultDistributor = () => {
   const admin: UsersModel = {
-    distributorName: "Distributor1",
-    username: "Distributor1",
-    password: "Distributor1",
+    distributorName: defaultUser.distributorName,
+    username: defaultUser.username,
+    password: "1234",
     createdDate: new Date(),
-    createdBy: "system",
-    include: [{ countryCode: ["IN", "US"], cityCode: [], ProvinceCode: [] }],
-    exclude: [
-      { countryCode: ["IN"], ProvinceCode: ["TN", "KA"], cityCode: ["CENAI"] }
-    ]
+    createdBy: defaultUser.createdBy,
+    include: defaultUser.include,
+    exclude: defaultUser.exclude
   };
+
   Users.isUserNameAvailable(admin)
     .then(() =>
       CreateHashedPassword(admin)

@@ -153,13 +153,13 @@ export async function checkUserAuth(code: any) {
   });
 }
 
-export function findOneAndDelete(username: any): any {
-  return User.findByIdAndDelete({ username: username })
-    .then()
-    .catch(err =>
-      Promise.reject({
-        status: 400,
-        message: `User:  findByIdAndDelete User with username "${username}" couldn't be deleted.`
-      })
-    );
+export async function findOneAndDelete(username: any) {
+  try {
+    await User.findOneAndDelete({ username: username });
+  } catch (err) {
+    return await Promise.reject({
+      status: 400,
+      message: `User:  findByIdAndDelete User with username "${username}" couldn't be deleted.`
+    });
+  }
 }

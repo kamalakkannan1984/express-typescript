@@ -2,13 +2,12 @@ import { Router } from "express";
 import * as SessionController from "./controllers/session";
 import { LoginController } from "./controllers/login";
 import { LogoutController } from "./controllers/logout";
-
 import * as Users from "./controllers/users";
 
 const LOGIN = "/login";
 const IS_LOGGED_IN = "/logged-in";
 const LOGOUT = "/logout";
-const DISTRIBTORS = "/distribtors";
+const DISTRIBTORS = "/distributors";
 
 export const Routes = Router()
   .post(LOGIN, LoginController)
@@ -33,6 +32,6 @@ export const Routes = Router()
   )
   .delete(
     `${DISTRIBTORS}/:username`,
-    SessionController.checkAuthorization(),
+    SessionController.checkAuthendication(),
     Users.remove
   );

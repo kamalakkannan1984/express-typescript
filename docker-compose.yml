@@ -1,0 +1,42 @@
+version: "3"
+services:
+  # Redis
+  redis:
+    container_name: Redis
+    restart: always
+    image: redis:alpine
+
+  # Mongo
+  mongo:
+    container_name: Mongo
+    image: mongo:latest
+    expose:
+      - "27017"
+    volumes:
+      # Development
+      # windows
+      #C:\Program Files\MongoDB\Server\4.0\data
+      - /Program Files/MongoDB/Server/4.0/data:/data/db
+      # mac pc
+      # - /Users/top/Desktop/mongodb:/data/db
+      # mac book
+      # - /Users/khalifa.khalfan/Desktop/Dev/data2:/data/db
+      # linux
+      # - /home/dockers/data:/data/db
+
+  hakuna_api:
+    container_name: hakuna-Apis
+    restart: always
+    image: hakuna-app:latest
+    expose:
+      - "3000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - NODE_ENV=production
+      - API_IP=localhost
+      - API_PORT=3000
+      - SESSION_STORE_HOST=redis
+      - STORE_IP=mongo
+      - STORE_PORT=27017

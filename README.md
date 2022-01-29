@@ -1,6 +1,6 @@
-# hakunamatata
+# Express-typescript
 
-#1 git pull https://github.com/kamalakkannan1984/hakunamatata.git
+#1 git pull https://github.com/kamalakkannan1984/express-typescript.git
 
 #2 >> cd hakunamatata
 
